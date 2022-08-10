@@ -58,7 +58,7 @@ sidebar_position: 3
 
 ## مثال
 
-```
+```java
 var str = "Java 10"; // infers String
 var list = new ArrayList<String>(); // infers ArrayList<String>
 var stream = list.stream();         // infers Stream<String>
@@ -78,7 +78,7 @@ var bos = new ByteArrayOutputStream();
 
 
 
-```
+```java
 Main.java:81: error: cannot infer type for local
 variable x
         var x;
@@ -130,7 +130,7 @@ Main.java:199: error: cannot infer type for local variable k
 
 
 
-```
+```java
 PriorityQueue<Item> itemQueue = ``new` `PriorityQueue<Item>();
 ```
 
@@ -140,7 +140,7 @@ PriorityQueue<Item> itemQueue = ``new` `PriorityQueue<Item>();
 
 
 
-```
+```java
 // OK: both declare variables of type PriorityQueue<Item>
 PriorityQueue<Item> itemQueue = new PriorityQueue<>();
 var itemQueue = new PriorityQueue<Item>();
@@ -152,7 +152,7 @@ var itemQueue = new PriorityQueue<Item>();
 
 
 
-```
+```java
 // DANGEROUS: infers as PriorityQueue<Object>
 var itemQueue = new PriorityQueue<>();
 ```
