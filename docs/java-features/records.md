@@ -19,13 +19,73 @@ sidebar_position: 6
 
 گاهی لازم می‌شود کلاس‌هایی داشته باشیم که فقط حامل داده هستند و قرار نیست  رفتاری داشته باشند. مثلا کلاس‌هایی که برای پارامترهای وروردی کوئری‌های  دیتابیسی استفاده می‌کنیم. به جای نوشتن ایجاد یک کلاس به روش معمول و  نوشتن فیلدها و سازنده و ... می‌توانیم از این پس از کلاس‌های Record  استفاده کنیم.
 
-کلاس‌های Record، نوع جدیدی از کلاس‌ها در زبان جاوا  هستند. این کلاس‌ها، کلاس‌های حامل داده‌های تغییرناپذیر هستند و انتقال  داده بین کلاس‌ها و ماژول‌های مختلف را تسهیل می‌کنند.
+کلاس‌های Record، نوع جدیدی از کلاس‌ها در زبان جاوا  هستند. این کلاس‌ها، کلاس‌های حامل داده‌های تغییرناپذیر هستند و انتقال داده بین کلاس‌ها و ماژول‌های مختلف را تسهیل می‌کنند.
+
+قبل از جاوا ۱۶ و بدون استفاده از کلاس رکورد، کلاس Person را برای نگهداری داده‌‌های تغییر ناپدیر به شکل زیر تعریف می‌شود. 
+
+```java
+public class Person {
+    private final String name;
+    private final String gender;
+    private final int age;
+
+    public Person(String name, String gender, int age) {
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Person person = (Person) o;
+        return age == person.age &&
+                Objects.equals(name, person.name) &&
+                Objects.equals(gender, person.gender);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, gender, age);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", gender='" + gender + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+```
+
+
+
+اما با کمک ویژگی جدید Record، می‌توان Person را در یک خط و به راحتی تعریف کرد:
+
+```java
+public record Person(String name, String gender, int age) {}
+```
 
 
 
 ## نحوه استفاده
-
-
 
 ```java
 RecordDeclaration:
