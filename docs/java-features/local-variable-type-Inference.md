@@ -22,7 +22,26 @@ sidebar_position: 3
 
 ## مقدمه
 
-تا قبل از اینکه این ویژگی در نسخه ۱۰ جاوا منتشر شود، همواره در تعریف  متغیرهای محلی باید نوع متغیر را قبل از نام متغیر به صورت صریح ذکر  می‌کردیم. اما با استفاده از این ویژگی، می‌توانیم هنگام تعریف متغیرهای  محلی به جای ذکر صریح نوع متغیر، از واژه رزروشده var استفاده کنیم.  کامپایلر نوع متغیر را بر اساس مقداردهی‌ای که برای آن انجام شده (سمت راست '=')، استنتاج می‌کند.
+تا قبل از اینکه این ویژگی در نسخه ۱۰ جاوا منتشر شود، همواره در تعریف  متغیرهای محلی باید نوع متغیر را قبل از نام متغیر به صورت صریح ذکر می‌کردیم. اما با استفاده از این ویژگی، می‌توانیم هنگام تعریف متغیرهای  محلی به جای ذکر صریح نوع متغیر، از واژه رزروشده var استفاده کنیم.  کامپایلر نوع متغیر را بر اساس مقداردهی‌ای که برای آن انجام شده (سمت راست '=')، استنتاج می‌کند.
+
+
+
+برای مثال بدون استفاده از کلیدواژه‌ی var چنین چیزی داشتیم:
+
+```java
+HashMap<String,ArrayList<ByteArrayOutputStream>> map =
+      new HashMap<String, ArrayList<ByteArrayOutputStream>>();
+```
+
+اما با این امکان جدید جاوا به سادگی می‌توان نوشت: 
+
+```java
+var map = new HashMap<String, ArrayList<ByteArrayOutputStream>>();
+```
+
+که خود جاوا دقیقا همان تایپ بالا را استنباط می کند.
+
+
 
 در ادامه مطلب با چگونگی استفاده از این ویژگی، باید و نبایدها و فواید آن بیشتر آشنا می‌شویم.
 
@@ -76,43 +95,75 @@ var bos = new ByteArrayOutputStream();
 
 ## استفاده‌های نادرست
 
-
-
 ```java
 Main.java:81: error: cannot infer type for local
 variable x
         var x;
             ^
   (cannot use 'val' on variable without initializer)
+```
+بدون مقداردهی به یک متغیر جاوا نمی‌تواند تایپ آن را حدس بزند.
+
+
+
+```java
  
 Main.java:82: error: cannot infer type for local
 variable f
         var f = () -> { };
             ^
   (lambda expression needs an explicit target-type)
- 
+```
+برای عبارات لامبدا نیز باید تایپشان تصریح شود تا جاوا قادر به استنباط نوع باشد.
+
+
+
+```java
 Main.java:83: error: cannot infer type for local
 variable g
         var g = null;
             ^
   (variable initializer is 'null')
- 
+```
+چون null مقدار معتبر برای همه‌ی تایپ‌های غیراولیه است، جاوا نمی‌تواند با مقداردهی متغیر به null، تایپ آن را استنباط کند.
+
+
+
+```java
 Main.java:84: error: cannot infer type for local
 variable c
         var c = l();
             ^
   (inferred type is non denotable)
- 
+```
+برخی تایپ‌های خاص جاوا که امکان نوشتن اسمشان را به شکل صریح نداریم (مثلا کلاس‌های داخلی بی‌نام) قابلیت استنباط تایپ ندارند. مطالعه بیشتر در [این لینک](https://developer.oracle.com/java/jdk-10-local-variable-type-inference.html).
+
+
+
+```java 
 Main.java:195: error: cannot infer type for local variable m
         var m = this::l;
             ^
   (method reference needs an explicit target-type)
- 
+```
+مانند لامبداها، رفرنس به متد‌ها نیز باید تایپشان توسط برنامه‌نویس مشخص شود. 
+
+
+
+```java 
 Main.java:199: error: cannot infer type for local variable k
         var k = { 1 , 2 };
             ^
   (array initializer needs an explicit target-type)
 ```
+
+برای مقداردهی آرایه نیز باید تایپ اعضای آرایه مشخص باشد. مثلا کد زیر قابل قبول است: 
+
+```java
+var k = new int[]{ 1 , 2 };
+```
+
+
 
 
 
@@ -131,7 +182,7 @@ Main.java:199: error: cannot infer type for local variable k
 
 
 ```java
-PriorityQueue<Item> itemQueue = ``new` `PriorityQueue<Item>();
+PriorityQueue<Item> itemQueue = new PriorityQueue<Item>();
 ```
 
 
@@ -168,7 +219,7 @@ var itemQueue = new PriorityQueue<>();
 ## نکته
 
 - با وجود var، جاوا هم‌چنان یک زبان برنامه‌نویسی نوع‌ثابت (statically typed) حساب می‌شود و باید اطلاعات کافی برای استنتاج نوع در کد وجود داشته باشد. در غیر این صورت، کامپایلر خطا می‌دهد.
-- کلیدواژه var در جاوا ۱۰،  مشابه کلیدواژه auto در ++C، کلیدواژه var در #C و جاوااسکریپت و اسکالا و  کاتلین، کلیدواژه def در Groovy و پایتون و عملگر =: در زبان برنامه‌نویسی  Go است.
+- کلیدواژه var در جاوا ۱۰،  مشابه کلیدواژه auto در ++C، کلیدواژه var در #C و اسکالا و  کاتلین و عملگر =: در زبان برنامه‌نویسی  Go است.
 - یک چیزی که مهم است بدانیم، این است که هر چند var به  عنوان یک کلیدواژه به نظر می‌رسد، اما واقعا یک کلیدواژه نیست و صرفا یک  کلمه رزروشده برای نام نوع است. به این معنی که کدی که از var به عنوان اسم متغیر، متد یا بسته استفاده می‌کند، تحت تاثیر قرار نخواهد گرفت. اما اگر  در نام‌گذاری کلاس‌ها و واسط‌ها از var استفاده کرده باشیم، به خطا  می‌خوریم.
   - البته که نام‌گذاری کلاس یا واسط با عنوان var، بر خلاف قواعد معمول نام‌گذاری در جاوا است و تعداد چنین مواردی بسیار کم خواهد بود.
 
